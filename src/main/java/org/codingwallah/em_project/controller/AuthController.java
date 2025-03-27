@@ -4,6 +4,7 @@ import java.util.Map;
 import org.codingwallah.em_project.entity.JwtRequest;
 import org.codingwallah.em_project.entity.JwtResponse;
 import org.codingwallah.em_project.entity.UserEntity;
+import org.codingwallah.em_project.repository.UserRepository;
 import org.codingwallah.em_project.security.JwtHelper;
 import org.codingwallah.em_project.service.UserService;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,6 +39,9 @@ public class AuthController {
   @Autowired
   private JwtHelper helper;
 
+  @Autowired
+  private PasswordEncoder passwordEncoder;
+
   private Logger logger = LoggerFactory.getLogger(AuthController.class);
 
   @PostMapping("/login")
@@ -45,23 +50,21 @@ public class AuthController {
     this.doAuthenticate(request.getUsername(), request.getPassword());
 
     UserDetails userDetails = userDetailsService.loadUserByUsername(
-      request.getUsername()
-    );
+        request.getUsername());
     String token = this.helper.generateToken(userDetails);
 
     JwtResponse response = JwtResponse
-      .builder()
-      .jwtToken(token)
-      .username(userDetails.getUsername())
-      .build();
+        .builder()
+        .jwtToken(token)
+        .username(userDetails.getUsername())
+        .build();
     return new ResponseEntity<>(response, HttpStatus.OK);
   }
 
   private void doAuthenticate(String email, String password) {
     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-      email,
-      password
-    );
+        email,
+        password);
     try {
       manager.authenticate(authentication);
     } catch (BadCredentialsException e) {
@@ -77,20 +80,28 @@ public class AuthController {
   @Autowired
   private UserService userService;
 
-  @PostMapping("/register")
-  public ResponseEntity<String> registerUser(@RequestBody UserEntity user) {
-    // System.out.print(user);
-    UserEntity registeredUser = userService.registerUser(
-      user.getUsername(),
-      user.getPassword(),
-      user.getRole()
-    );
-    return new ResponseEntity<>(
-      "User registered successfully: " + registeredUser.getUsername(),
-      HttpStatus.CREATED
-    );
-  }
+  @Autowired
+  private UserRepository userRepository;
+
+ @PostMapping("/register")
+public String register(@RequestBody Map<String, String> request) {
+    String username = request.get("username");
+    String password = passwordEncoder.encode(request.get("password"));
+    String role = request.getOrDefault("role", "USER"); // Default role: USER
+
+    UserEntity user = new UserEntity();
+    user.setUsername(username);
+    user.setPassword(password);
+    user.setRole(role); // ✅ Set role
+
+    userRepository.save(user);
+    return "User registered successfully!";
 }
+
+}
+
+
+
 // package org.codingwallah.em_project.controller;
 // import org.codingwallah.em_project.entity.UserEntity;
 // import org.codingwallah.em_project.repository.UserRepository;
