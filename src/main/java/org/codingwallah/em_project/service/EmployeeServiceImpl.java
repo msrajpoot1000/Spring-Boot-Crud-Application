@@ -1,7 +1,11 @@
-package org.codingwallah.em_project;
+package org.codingwallah.em_project.service;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.codingwallah.em_project.dao.Employee;
+import org.codingwallah.em_project.entity.EmployeeEntity;
+import org.codingwallah.em_project.repository.EmployeeRespository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,7 +14,7 @@ import org.springframework.stereotype.Service;
 public class EmployeeServiceImpl implements EmployeeService {
 
   @Autowired
-  private EmployeeRespsitory employeeRespsitory;
+  private EmployeeRespository employeeRespsitory;
 
   @Override
   public String createEmployee(Employee employee) {

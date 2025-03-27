@@ -1,7 +1,9 @@
-package org.codingwallah.em_project;
+package org.codingwallah.em_project.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.codingwallah.em_project.dao.Employee;
+import org.codingwallah.em_project.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin(origins = "*")
+// @CrossOrigin(origins = "*")
 @RestController
 public class EmpController {
 

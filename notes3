@@ -1,0 +1,9 @@
+1) when i apply it simply use the 
+  security it simpley create the password and username is username
+
+
+  2) automatic password generation
+   spring.security.user.name=manish
+spring.security.user.password=manish
+
+3) 

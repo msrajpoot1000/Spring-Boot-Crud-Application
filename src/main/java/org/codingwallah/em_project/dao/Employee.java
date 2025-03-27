@@ -1,4 +1,4 @@
-package org.codingwallah.em_project;
+package org.codingwallah.em_project.dao;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
